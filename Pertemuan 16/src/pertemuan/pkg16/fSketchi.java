@@ -52,6 +52,7 @@ public class fSketchi extends javax.swing.JFrame {
         cADD.setEnabled(true);
         fieldIsian(false);
         txCODE.setEditable(false);
+        updateTotalPayment();
     }
     
     private String generateAutoCode() throws SQLException {
@@ -115,7 +116,22 @@ public class fSketchi extends javax.swing.JFrame {
     private double unformatRupiah(String text) {
     String numeric = text.replaceAll("[^\\d]", "");
     return numeric.isEmpty() ? 0 : Double.parseDouble(numeric);
-}
+    }
+
+    private void updateTotalPayment() {
+        double total = 0;
+        DefaultTableModel model = (DefaultTableModel) TM.getModel();
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Object value = model.getValueAt(i, 5);
+            if (value != null) {
+                double bayar = unformatRupiah(value.toString());
+                total += bayar;
+            }
+        }
+
+        tPAY.setText(formatRupiah(total));
+    }
 
     
     private void storedta()throws SQLException{
@@ -251,6 +267,10 @@ public class fSketchi extends javax.swing.JFrame {
         cCLOSE = new javax.swing.JButton();
         txDATE = new com.toedter.calendar.JDateChooser();
         cbJOB = new javax.swing.JComboBox<>();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        tPAY = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -267,7 +287,7 @@ public class fSketchi extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Code", "Date", "Page", "Name", "Job", "Payment"
+                "Code", "Date", "Page", "Author Name", "Job", "Payment"
             }
         ));
         TM.setShowGrid(false);
@@ -342,10 +362,49 @@ public class fSketchi extends javax.swing.JFrame {
 
         txDATE.setDateFormatString("d MM y");
 
-        cbJOB.setBackground(new java.awt.Color(255, 255, 255));
         cbJOB.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         cbJOB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "     ", "Color", "Shadow", "Color + Shadow" }));
         cbJOB.setBorder(null);
+
+        jLabel8.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
+        jLabel8.setText("Total Payment");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(265, 265, 265)
+                .addComponent(jLabel8)
+                .addContainerGap(240, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        tPAY.setFont(new java.awt.Font("Monospaced", 1, 15)); // NOI18N
+        tPAY.setText("Rp 0");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tPAY, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(tPAY)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -355,8 +414,20 @@ public class fSketchi extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(122, 122, 122)
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(39, Short.MAX_VALUE)
+                .addContainerGap(34, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cADD, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -382,11 +453,7 @@ public class fSketchi extends javax.swing.JFrame {
                             .addComponent(txPAYMENT, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txNAMEs, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cbJOB, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(23, 23, 23))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(122, 122, 122)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -395,6 +462,10 @@ public class fSketchi extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -429,7 +500,7 @@ public class fSketchi extends javax.swing.JFrame {
                     .addComponent(cEDIT, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cDELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cCLOSE, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addGap(93, 93, 93))
         );
 
         pack();
@@ -487,6 +558,9 @@ public class fSketchi extends javax.swing.JFrame {
                 Logger.getLogger(fSketchi.class.getName()).log(Level.SEVERE, null, ex);
             }
             cleartextfield();
+            
+            updateTotalPayment();
+
             fieldIsian(false);
         }
     }//GEN-LAST:event_cADDActionPerformed
@@ -516,6 +590,7 @@ public class fSketchi extends javax.swing.JFrame {
                 Logger.getLogger(fSketchi.class.getName()).log(Level.SEVERE, null, ex);
             }
             cleartextfield();
+            updateTotalPayment();
             fieldIsian(false);
             cADD.setEnabled(true);
             cEDIT.setEnabled(false);
@@ -542,6 +617,7 @@ public class fSketchi extends javax.swing.JFrame {
                     Logger.getLogger(fSketchi.class.getName()).log(Level.SEVERE, null, ex);
                 }
                     cleartextfield();
+                    updateTotalPayment();
                     fieldIsian(false);
                     cADD.setEnabled(true);
                     cEDIT.setEnabled(false);
@@ -626,7 +702,11 @@ public class fSketchi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel tPAY;
     private javax.swing.JTextField txCODE;
     private com.toedter.calendar.JDateChooser txDATE;
     private javax.swing.JTextField txNAMEs;
